@@ -11,4 +11,7 @@ public interface KantorRepository extends JpaRepository<Kantor, Long> {
 
     @Query("SELECT s FROM Kantor s WHERE s.alamat = ?1")
     Optional<Kantor> findKantorByAddress(String alamat);
+
+    @Query("SELECT s FROM Kantor s WHERE s.id = ?1")
+    Optional<Kantor> findKantorById(Long id);
 }

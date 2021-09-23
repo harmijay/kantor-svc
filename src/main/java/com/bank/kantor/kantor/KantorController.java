@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
 
-import static com.sun.beans.introspect.PropertyInfo.Name.required;
+//import static com.sun.beans.introspect.PropertyInfo.Name.required;
 
 @RestController
 @RequestMapping(path = "kantor")
@@ -27,6 +28,12 @@ public class KantorController {
     @PostMapping
     public void registerNewKantor(@RequestBody Kantor kantor){
         kantorService.addNewKantor(kantor);
+    }
+
+    @GetMapping (path = "/validasiIdKantor/{kantorId}")
+    @ResponseBody
+    public HashMap<String, Object> validateIdKantor(@PathVariable Long kantorId){
+        return kantorService.validateIdKantor(kantorId);
     }
 
     @DeleteMapping(path = "{kantorId}")

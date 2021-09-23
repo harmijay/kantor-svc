@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +22,16 @@ public class KantorService {
 
     public List<Kantor> getKantors(){
         return kantorRepository.findAll();
+    }
+
+    public HashMap<String, Object> validateIdKantor(Long kantorId){
+        HashMap<String, Object> response = new HashMap<>();
+        Optional<Kantor> kantorOptional = kantorRepository.findKantorById(kantorId);
+        if (kantorOptional.isPresent()){
+            response.put("message", "id kantor ada");
+        } else response.put("message", "id kantor tidak ada");
+
+        return response;
     }
 
     public void addNewKantor(Kantor kantor){
