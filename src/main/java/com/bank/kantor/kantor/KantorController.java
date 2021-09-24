@@ -2,12 +2,12 @@ package com.bank.kantor.kantor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
-
-//import static com.sun.beans.introspect.PropertyInfo.Name.required;
 
 @RestController
 @RequestMapping(path = "kantor")
@@ -20,28 +20,42 @@ public class KantorController {
         this.kantorService = kantorService;
     }
 
-    @GetMapping
+    @GetMapping (path = "/list-kantor")
     public List<Kantor> getKantors(){
         return kantorService.getKantors();
     }
 
-    @PostMapping
-    public void registerNewKantor(@RequestBody Kantor kantor){
-        kantorService.addNewKantor(kantor);
+    @PostMapping (path = "/register-kantor")
+    public HashMap<String, Object> registerNewKantor(@RequestBody Kantor kantor){
+       HashMap<String, Object> dataKantor = kantorService.addNewKantor(kantor);
+       HashMap<String, Object> addKantor = new HashMap<>();
+
+       addKantor.put("Id Kantor Baru : ", kantor.getId());
+       addKantor.put("Nama Kantor Baru : ", kantor.getName());
+       addKantor.put("Alamat Kantor Baru : ", kantor.getAlamat());
+       addKantor.put("Status Kantor Baru : ", kantor.getStatus());
+
+        WebClient client = WebClient.create("http://localhost:7007");
+        WebClient.ResponseSpec responseSpec = client.post().uri("/api/transaksi")
+                .body(Mono.just(addKantor), HashMap.class)
+                .retrieve();
+
+        responseSpec.bodyToMono(HashMap.class).block();
+        return dataKantor;
     }
 
-    @GetMapping (path = "/validasiIdKantor/{kantorId}")
+    @GetMapping (path = "/validasi-id-kantor/{kantorId}")
     @ResponseBody
     public HashMap<String, Object> validateIdKantor(@PathVariable Long kantorId){
         return kantorService.validateIdKantor(kantorId);
     }
 
-    @DeleteMapping(path = "{kantorId}")
+    @DeleteMapping(path = "/delete-kantor/{kantorId}")
     public void deleteKantor(@PathVariable("kantorId") Long id){
         kantorService.deleteKantor(id);
     }
 
-    @PutMapping(path = "{kantorId}")
+    @PutMapping(path = "/update-kantor/{kantorId}")
     public void updateKantor(
             @PathVariable("kantorId") Long kantorId,
             @RequestParam(required = false) String name,

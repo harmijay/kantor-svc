@@ -24,4 +24,20 @@ public class Status {
     public String getMessageIdKantorFound(){
         return "Id Kantor Ditemukan!";
     }
+
+    public Integer getStatusAddKantorSuccess(){
+        return 230;
+    }
+
+    public String getMessageAddKantorSuccess(){
+        return "Kantor Berhasil Ditambahkan!";
+    }
+
+    public Integer getStatusAddKantorFailed(){
+        return 431;
+    }
+
+    public String getMessageAddKantorFailed(){
+        return "Kantor Gagal Ditambahkan/Alamat sudah Ditempati!";
+    }
 }

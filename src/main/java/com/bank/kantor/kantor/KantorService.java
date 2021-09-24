@@ -39,12 +39,19 @@ public class KantorService {
         return response;
     }
 
-    public void addNewKantor(Kantor kantor){
+    public HashMap<String, Object> addNewKantor(Kantor kantor){
+        HashMap<String, Object> response = new HashMap<>();
         Optional<Kantor> kantorOptional = kantorRepository.findKantorByAddress(kantor.getAlamat());
         if (kantorOptional.isPresent()){
-            throw new IllegalStateException("alamat kantor sudah ditempati");
+//            throw new IllegalStateException("alamat kantor sudah ditempati");
+            response.put("status", status.getStatusAddKantorFailed());
+            response.put("message", status.getMessageAddKantorFailed());
         }
         kantorRepository.save(kantor);
+        response.put("status", status.getStatusAddKantorSuccess());
+        response.put("message", status.getMessageAddKantorSuccess());
+
+        return response;
     }
 
     public void deleteKantor(Long kantorId){
