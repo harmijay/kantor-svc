@@ -14,10 +14,12 @@ import java.util.Optional;
 public class KantorService {
 
     private final KantorRepository kantorRepository;
+    private Status status;
 
     @Autowired
-    public KantorService(KantorRepository kantorRepository) {
+    public KantorService(KantorRepository kantorRepository, Status status) {
         this.kantorRepository = kantorRepository;
+        this.status = status;
     }
 
     public List<Kantor> getKantors(){
@@ -28,9 +30,12 @@ public class KantorService {
         HashMap<String, Object> response = new HashMap<>();
         Optional<Kantor> kantorOptional = kantorRepository.findKantorById(kantorId);
         if (kantorOptional.isPresent()){
-            response.put("message", "id kantor ada");
-        } else response.put("message", "id kantor tidak ada");
-
+            response.put("status", status.getStatusIdKantorFound());
+            response.put("message", status.getMessageIdKantorFound());
+        } else {
+            response.put("status", status.getStatusIdKantorNotFound());
+            response.put("message", status.getMessageIdKantorNotFound());
+        }
         return response;
     }
 
